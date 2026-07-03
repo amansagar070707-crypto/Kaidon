@@ -209,8 +209,8 @@ export default function MarketplacePage() {
 
       {/* Search & Filters */}
       <div className="block" style={{ marginBottom: "24px" }}>
-        <div className="flex gap-3 items-center" style={{ flexWrap: "wrap" }}>
-          <div className="flex-1" style={{ minWidth: "240px" }}>
+        <div className="filter-bar">
+          <div className="filter-bar__search">
             <div className="input-wrapper">
               <Search size={16} style={{ position: "absolute", left: "12px", top: "50%", transform: "translateY(-50%)", opacity: 0.5 }} />
               <input
@@ -224,7 +224,7 @@ export default function MarketplacePage() {
             </div>
           </div>
 
-          <div className="flex gap-2">
+          <div className="filter-bar__controls">
             <select
               value={selectedStatus || ""}
               onChange={(e) => setSelectedStatus((e.target.value as AgentStatus) || null)}
@@ -258,13 +258,12 @@ export default function MarketplacePage() {
         </div>
 
         {/* Tag filters */}
-        <div className="flex gap-2 mt-3" style={{ flexWrap: "wrap" }}>
+        <div className="tag-filters" style={{ marginTop: "16px" }}>
           {allTags.slice(0, 12).map((tag) => (
             <button
               key={tag}
               onClick={() => setSelectedTag(selectedTag === tag ? null : tag)}
-              className={`badge ${selectedTag === tag ? "badge--accent" : "badge--default"}`}
-              style={{ cursor: "pointer" }}
+              className={`tag-chip ${selectedTag === tag ? "tag-chip--active" : ""}`}
             >
               {tag}
             </button>
@@ -272,8 +271,7 @@ export default function MarketplacePage() {
           {selectedTag && (
             <button
               onClick={() => setSelectedTag(null)}
-              className="badge badge--default"
-              style={{ cursor: "pointer" }}
+              className="tag-chip tag-chip--clear"
             >
               <X size={12} /> Clear
             </button>
@@ -333,9 +331,9 @@ export default function MarketplacePage() {
             </div>
 
             {/* Tags */}
-            <div className="flex flex-wrap gap-1 mt-2">
+            <div className="card-tags">
               {agent.tags.map((tag) => (
-                <span key={tag} className="text-xs text-muted">#{tag}</span>
+                <span key={tag} className="card-tag">#{tag}</span>
               ))}
             </div>
           </div>
