@@ -1,0 +1,27 @@
+{
+  "id": "problem-agent",
+  "name": "problem-agent",
+  "version": "0.1.0",
+  "description": "Short",
+  "model": {
+    "provider": "openrouter",
+    "model": "",
+    "family": "open-source"
+  },
+  "tools": [
+    {
+      "name": "Search"
+    }
+  ],
+  "memory": {
+    "scope": "global",
+    "retentionDays": 120
+  },
+  "run": {
+    "checkpointEvery": "tool",
+    "retryLimit": 0,
+    "cancelable": false,
+    "resumable": false
+  },
+  "status": "draft"
+}
