@@ -16,6 +16,31 @@ import {
   Loader2,
 } from "lucide-react";
 import Link from "next/link";
+import {
+  Message,
+  MessageContent,
+  MessageResponse,
+  MessageActions,
+  MessageAction,
+} from "../../../components/ai-elements/message";
+import {
+  Reasoning,
+} from "../../../components/ai-elements/index";
+import {
+  Sources,
+  Source,
+} from "../../../components/ai-elements/index";
+import {
+  ChainOfThought,
+  ChainOfThoughtStep,
+} from "../../../components/ai-elements/index";
+import {
+  Task,
+  TaskItem,
+} from "../../../components/ai-elements/index";
+import {
+  Context,
+} from "../../../components/ai-elements/index";
 
 type AgentStatus = "approved" | "pending" | "community" | "deprecated";
 
@@ -39,16 +64,12 @@ type Message = {
   role: "user" | "assistant";
   content: string;
   timestamp: string;
-  blocks?: ResponseBlock[];
+  reasoning?: string;
+  sources?: { title: string; url: string }[];
+  steps?: { label: string; description?: string; status: "complete" | "active" | "pending" }[];
+  tasks?: { title: string; items: { text: string; completed: boolean }[] }[];
+  tokens?: { used: number; max: number };
 };
-
-type ResponseBlock =
-  | { type: "text"; content: string }
-  | { type: "heading"; content: string }
-  | { type: "list"; items: string[] }
-  | { type: "table"; headers: string[]; rows: string[][] }
-  | { type: "code"; language: string; content: string }
-  | { type: "callout"; variant: "info" | "warning" | "success"; content: string };
 
 const agents: Record<string, Agent> = {
   "job-search-agent": {
@@ -109,98 +130,69 @@ const agents: Record<string, Agent> = {
   },
 };
 
-const sampleResponses: Record<string, { text: string; blocks: ResponseBlock[] }> = {
-  "job-search-agent": {
-    text: "I found 5 highly relevant AI engineer roles for you in 2026. Here's a summary of the top matches based on your profile and preferences.",
-    blocks: [
+const sampleResponses: Record<string, (query: string) => Message> = {
+  "job-search-agent": (query) => ({
+    id: `msg_${Date.now()}`,
+    role: "assistant",
+    content: `I've searched across LinkedIn, Wellfound, and Greenhouse for AI engineer roles matching your criteria. Found 5 strong matches with remote-friendly positions and competitive compensation.\n\n## Top Matches\n\n| Company | Role | Location | Salary | Match |\n|---------|------|----------|--------|-------|\n| Anthropic | AI Engineer | Remote | $180-250k | 94% |\n| OpenAI | Research Engineer | San Francisco | $200-300k | 91% |\n| Google DeepMind | ML Engineer | Mountain View | $190-280k | 88% |\n| Meta AI | AI Platform Engineer | Remote | $170-240k | 85% |\n| Cohere | Applied Scientist | Toronto/Remote | $150-220k | 82% |\n\n## Recommended Actions\n\n- Apply to Anthropic and OpenAI first - highest match scores\n- Update your LinkedIn profile with "AI Engineer" keywords\n- Prepare a portfolio showcasing LLM/agent work\n- Set up job alerts on Wellfound for startup opportunities`,
+    reasoning: `Analyzing the user's query: "${query}"\n\n1. Understanding intent: Looking for AI engineering roles in 2026\n2. Search strategy: Query LinkedIn Jobs, Wellfound, and Greenhouse APIs\n3. Filtering criteria: Remote-friendly, competitive salary, AI/ML focus\n4. Ranking factors: Company reputation, role fit, compensation, location\n5. Output format: Table with key metrics and actionable recommendations`,
+    sources: [
+      { title: "LinkedIn Jobs - AI Engineer", url: "https://linkedin.com/jobs/search?keywords=ai+engineer" },
+      { title: "Wellfound - AI/ML Roles", url: "https://wellfound.com/role?q=ai+engineer" },
+      { title: "Greenhouse - Tech Jobs", url: "https://greenhouse.io/job-board" },
+    ],
+    steps: [
+      { label: "Understanding request", description: "Parsed query for AI engineer roles", status: "complete" },
+      { label: "Searching sources", description: "Queried LinkedIn, Wellfound, Greenhouse", status: "complete" },
+      { label: "Ranking matches", description: "Scored 12 candidates against criteria", status: "complete" },
+      { label: "Preparing output", description: "Generated table and recommendations", status: "complete" },
+    ],
+    tasks: [
       {
-        type: "callout",
-        variant: "success",
-        content: "Found 5 strong matches across 3 job platforms. All roles are remote-friendly with competitive compensation.",
-      },
-      {
-        type: "heading",
-        content: "Top Matches",
-      },
-      {
-        type: "table",
-        headers: ["Company", "Role", "Location", "Salary", "Match"],
-        rows: [
-          ["Anthropic", "AI Engineer", "Remote", "$180-250k", "94%"],
-          ["OpenAI", "Research Engineer", "San Francisco", "$200-300k", "91%"],
-          ["Google DeepMind", "ML Engineer", "Mountain View", "$190-280k", "88%"],
-          ["Meta AI", "AI Platform Engineer", "Remote", "$170-240k", "85%"],
-          ["Cohere", "Applied Scientist", "Toronto/Remote", "$150-220k", "82%"],
-        ],
-      },
-      {
-        type: "heading",
-        content: "Recommended Actions",
-      },
-      {
-        type: "list",
+        title: "Job Search Workflow",
         items: [
-          "Apply to Anthropic and OpenAI first - highest match scores",
-          "Update your LinkedIn profile with 'AI Engineer' keywords",
-          "Prepare a portfolio showcasing LLM/agent work",
-          "Set up job alerts on Wellfound for startup opportunities",
+          { text: "Query approved job sources", completed: true },
+          { text: "Normalize job metadata", completed: true },
+          { text: "Rank matches by relevance", completed: true },
+          { text: "Draft outreach messages", completed: false },
+          { text: "Track applications", completed: false },
         ],
-      },
-      {
-        type: "callout",
-        variant: "info",
-        content: "I've saved these leads to your workspace memory. You can access them anytime from the Runtime dashboard.",
       },
     ],
-  },
-  "billing-reconcile-agent": {
-    text: "I've analyzed your billing records for Q1 2026. Here's the reconciliation report with identified discrepancies.",
-    blocks: [
+    tokens: { used: 2847, max: 8192 },
+    timestamp: new Date().toISOString(),
+  }),
+  "billing-reconcile-agent": (query) => ({
+    id: `msg_${Date.now()}`,
+    role: "assistant",
+    content: `I've analyzed your billing records for Q1 2026. Found 3 discrepancies totaling $2,450.00.\n\n## Reconciliation Summary\n\n| Invoice | Stripe | Ledger | Difference | Status |\n|---------|--------|--------|------------|--------|\n| INV-2026-001 | $1,200 | $1,200 | $0 | Matched |\n| INV-2026-002 | $3,500 | $1,050 | $2,450 | Mismatch |\n| INV-2026-003 | $890 | $890 | $0 | Matched |\n| INV-2026-004 | $2,100 | $2,100 | $0 | Matched |\n\n## Issues Found\n\n- **INV-2026-002**: Stripe shows $3,500 but ledger only recorded $1,050 - possible partial payment not synced\n- Missing webhook event for payment on 2026-01-15\n- Tax calculation discrepancy on international invoice INV-2026-005`,
+    reasoning: `Processing billing reconciliation query: "${query}"\n\n1. Loading Stripe transaction history for Q1 2026\n2. Loading ledger entries from accounting system\n3. Matching transactions by invoice ID and amount\n4. Flagging mismatches for manual review\n5. Calculating total discrepancy amount`,
+    sources: [
+      { title: "Stripe Dashboard", url: "https://dashboard.stripe.com" },
+      { title: "QuickBooks Ledger", url: "https://quickbooks.intuit.com" },
+    ],
+    steps: [
+      { label: "Loading Stripe data", description: "Fetched 47 transactions", status: "complete" },
+      { label: "Loading ledger entries", description: "Fetched 52 entries", status: "complete" },
+      { label: "Matching records", description: "Compared by invoice ID", status: "complete" },
+      { label: "Flagging issues", description: "Found 3 discrepancies", status: "complete" },
+    ],
+    tasks: [
       {
-        type: "callout",
-        variant: "warning",
-        content: "Found 3 billing discrepancies totaling $2,450.00 that require immediate attention.",
-      },
-      {
-        type: "heading",
-        content: "Reconciliation Summary",
-      },
-      {
-        type: "table",
-        headers: ["Invoice", "Stripe Amount", "Ledger Amount", "Difference", "Status"],
-        rows: [
-          ["INV-2026-001", "$1,200.00", "$1,200.00", "$0.00", "Matched"],
-          ["INV-2026-002", "$3,500.00", "$1,050.00", "$2,450.00", "Mismatch"],
-          ["INV-2026-003", "$890.00", "$890.00", "$0.00", "Matched"],
-          ["INV-2026-004", "$2,100.00", "$2,100.00", "$0.00", "Matched"],
-        ],
-      },
-      {
-        type: "heading",
-        content: "Issues Found",
-      },
-      {
-        type: "list",
+        title: "Reconciliation Tasks",
         items: [
-          "INV-2026-002: Stripe shows $3,500 but ledger only recorded $1,050 - possible partial payment not synced",
-          "Missing webhook event for payment on 2026-01-15",
-          "Tax calculation discrepancy on international invoice INV-2026-005",
+          { text: "Import Stripe transactions", completed: true },
+          { text: "Import ledger entries", completed: true },
+          { text: "Match by invoice ID", completed: true },
+          { text: "Flag mismatches", completed: true },
+          { text: "Generate report", completed: false },
         ],
-      },
-      {
-        type: "code",
-        language: "json",
-        content: '{\n  "discrepancy": {\n    "invoice": "INV-2026-002",\n    "stripe_amount": 350000,\n    "ledger_amount": 105000,\n    "difference_cents": 245000,\n    "recommended_action": "manual_review"\n  }\n}',
       },
     ],
-  },
+    tokens: { used: 1923, max: 8192 },
+    timestamp: new Date().toISOString(),
+  }),
 };
-
-function parseResponseBlocks(text: string): ResponseBlock[] {
-  return [
-    { type: "text", content: text },
-  ];
-}
 
 export default function AgentDetailPage({ params }: { params: Promise<{ slug: string }> }) {
   const resolvedParams = React.use(params);
@@ -250,13 +242,21 @@ export default function AgentDetailPage({ params }: { params: Promise<{ slug: st
     await new Promise((resolve) => setTimeout(resolve, 1500 + Math.random() * 1000));
 
     const sampleData = sampleResponses[resolvedParams.slug];
-    const assistantMessage: Message = {
-      id: `msg_${Date.now()}`,
-      role: "assistant",
-      content: sampleData?.text || `I've processed your request: "${userMessage.content}". Here are the results.`,
-      timestamp: new Date().toISOString(),
-      blocks: sampleData?.blocks || parseResponseBlocks(`Based on my analysis of "${userMessage.content}", here are my findings. The agent has completed the task and generated a comprehensive response.`),
-    };
+    const assistantMessage = sampleData
+      ? sampleData(input.trim())
+      : {
+          id: `msg_${Date.now()}`,
+          role: "assistant" as const,
+          content: `I've processed your request: "${userMessage.content}". Here are the results based on my analysis.`,
+          timestamp: new Date().toISOString(),
+          reasoning: `Analyzing: "${userMessage.content}"\n\n1. Understanding intent\n2. Searching relevant sources\n3. Compiling results`,
+          steps: [
+            { label: "Understanding request", status: "complete" as const },
+            { label: "Processing data", status: "complete" as const },
+            { label: "Generating response", status: "complete" as const },
+          ],
+          tokens: { used: 1200, max: 8192 },
+        };
 
     setMessages((prev) => [...prev, assistantMessage]);
     setIsRunning(false);
@@ -267,7 +267,8 @@ export default function AgentDetailPage({ params }: { params: Promise<{ slug: st
       role: msg.role,
       content: msg.content,
       timestamp: msg.timestamp,
-      blocks: msg.blocks,
+      reasoning: msg.reasoning,
+      sources: msg.sources,
     }));
 
     let content = "";
@@ -280,24 +281,15 @@ export default function AgentDetailPage({ params }: { params: Promise<{ slug: st
       for (const msg of exportData) {
         content += `## ${msg.role === "user" ? "User Query" : "Agent Response"}\n\n`;
         content += `${msg.content}\n\n`;
-        if (msg.blocks) {
-          for (const block of msg.blocks) {
-            if (block.type === "table") {
-              content += `| ${block.headers.join(" | ")} |\n`;
-              content += `| ${block.headers.map(() => "---").join(" | ")} |\n`;
-              for (const row of block.rows) {
-                content += `| ${row.join(" | ")} |\n`;
-              }
-              content += "\n";
-            } else if (block.type === "list") {
-              for (const item of block.items) {
-                content += `- ${item}\n`;
-              }
-              content += "\n";
-            } else if (block.type === "code") {
-              content += `\`\`\`${block.language}\n${block.content}\n\`\`\`\n\n`;
-            }
+        if (msg.reasoning) {
+          content += `### Reasoning\n\n${msg.reasoning}\n\n`;
+        }
+        if (msg.sources && msg.sources.length > 0) {
+          content += `### Sources\n\n`;
+          for (const src of msg.sources) {
+            content += `- [${src.title}](${src.url})\n`;
           }
+          content += "\n";
         }
       }
       filename = `${agent.slug}-export.md`;
@@ -328,77 +320,6 @@ export default function AgentDetailPage({ params }: { params: Promise<{ slug: st
     navigator.clipboard.writeText(text);
     setCopiedId(id);
     setTimeout(() => setCopiedId(null), 2000);
-  };
-
-  const renderBlock = (block: ResponseBlock, index: number) => {
-    switch (block.type) {
-      case "text":
-        return (
-          <div key={index} className="response-block response-block--text">
-            {block.content}
-          </div>
-        );
-      case "heading":
-        return (
-          <h3 key={index} className="response-block response-block--heading">
-            {block.content}
-          </h3>
-        );
-      case "list":
-        return (
-          <ul key={index} className="response-block response-block--list">
-            {block.items.map((item, i) => (
-              <li key={i}>{item}</li>
-            ))}
-          </ul>
-        );
-      case "table":
-        return (
-          <div key={index} className="response-block response-block--table">
-            <table>
-              <thead>
-                <tr>
-                  {block.headers.map((h, i) => (
-                    <th key={i}>{h}</th>
-                  ))}
-                </tr>
-              </thead>
-              <tbody>
-                {block.rows.map((row, i) => (
-                  <tr key={i}>
-                    {row.map((cell, j) => (
-                      <td key={j}>{cell}</td>
-                    ))}
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        );
-      case "code":
-        return (
-          <div key={index} className="response-block response-block--code">
-            <div className="code-header">
-              <span>{block.language}</span>
-              <button
-                onClick={() => copyToClipboard(block.content, `code-${index}`)}
-                className="btn btn--ghost btn--xs"
-              >
-                {copiedId === `code-${index}` ? <Check size={12} /> : <Copy size={12} />}
-              </button>
-            </div>
-            <pre><code>{block.content}</code></pre>
-          </div>
-        );
-      case "callout":
-        return (
-          <div key={index} className={`response-block response-block--callout response-block--callout-${block.variant}`}>
-            {block.content}
-          </div>
-        );
-      default:
-        return null;
-    }
   };
 
   return (
@@ -454,51 +375,95 @@ export default function AgentDetailPage({ params }: { params: Promise<{ slug: st
           )}
 
           {messages.map((message) => (
-            <div key={message.id} className={`agent-chat__message agent-chat__message--${message.role}`}>
-              <div className="agent-chat__message-header">
-                <span className="agent-chat__message-role">
-                  {message.role === "user" ? "You" : agent.name}
-                </span>
-                <span className="agent-chat__message-time">
-                  {new Date(message.timestamp).toLocaleTimeString()}
-                </span>
-              </div>
-              <div className="agent-chat__message-content">
-                {message.role === "assistant" && message.blocks ? (
-                  <div className="response-blocks">
-                    {message.blocks.map((block, i) => renderBlock(block, i))}
-                  </div>
-                ) : (
-                  <div className="response-block response-block--text">
-                    {message.content}
-                  </div>
-                )}
-              </div>
+            <div key={message.id} className="ai-message-wrapper">
+              <Message from={message.role}>
+                <MessageContent>
+                  {/* Reasoning Block */}
+                  {message.reasoning && (
+                    <Reasoning defaultOpen={false}>
+                      <div className="ai-reasoning__text">
+                        {message.reasoning.split("\n").map((line, i) => (
+                          <p key={i}>{line}</p>
+                        ))}
+                      </div>
+                    </Reasoning>
+                  )}
+
+                  {/* Sources */}
+                  {message.sources && message.sources.length > 0 && (
+                    <Sources>
+                      {message.sources.map((src, i) => (
+                        <Source key={i} href={src.url} title={src.title} />
+                      ))}
+                    </Sources>
+                  )}
+
+                  {/* Main Response */}
+                  <MessageResponse>{message.content}</MessageResponse>
+
+                  {/* Chain of Thought */}
+                  {message.steps && message.steps.length > 0 && (
+                    <ChainOfThought defaultOpen={false}>
+                      {message.steps.map((step, i) => (
+                        <ChainOfThoughtStep
+                          key={i}
+                          label={step.label}
+                          description={step.description}
+                          status={step.status}
+                        />
+                      ))}
+                    </ChainOfThought>
+                  )}
+
+                  {/* Tasks */}
+                  {message.tasks && message.tasks.length > 0 && (
+                    <div className="ai-tasks-section">
+                      {message.tasks.map((task, i) => (
+                        <Task key={i} defaultOpen={false}>
+                          <span className="ai-task__title">{task.title}</span>
+                          <div className="ai-task__items">
+                            {task.items.map((item, j) => (
+                              <TaskItem key={j} completed={item.completed}>
+                                {item.text}
+                              </TaskItem>
+                            ))}
+                          </div>
+                        </Task>
+                      ))}
+                    </div>
+                  )}
+
+                  {/* Token Usage */}
+                  {message.tokens && (
+                    <Context maxTokens={message.tokens.max} usedTokens={message.tokens.used} />
+                  )}
+                </MessageContent>
+              </Message>
+
+              {/* Actions */}
               {message.role === "assistant" && (
-                <div className="agent-chat__message-actions">
-                  <button
+                <MessageActions>
+                  <MessageAction
                     onClick={() => copyToClipboard(message.content, message.id)}
-                    className="btn btn--ghost btn--xs"
+                    label={copiedId === message.id ? "Copied" : "Copy"}
                   >
                     {copiedId === message.id ? <Check size={12} /> : <Copy size={12} />}
-                    Copy
-                  </button>
-                </div>
+                  </MessageAction>
+                </MessageActions>
               )}
             </div>
           ))}
 
           {isRunning && (
-            <div className="agent-chat__message agent-chat__message--assistant">
-              <div className="agent-chat__message-header">
-                <span className="agent-chat__message-role">{agent.name}</span>
-              </div>
-              <div className="agent-chat__message-content">
-                <div className="agent-chat__thinking">
-                  <Loader2 size={16} className="animate-spin" />
-                  <span>Researching and analyzing...</span>
-                </div>
-              </div>
+            <div className="ai-message-wrapper">
+              <Message from="assistant">
+                <MessageContent>
+                  <div className="ai-thinking">
+                    <Loader2 size={16} className="animate-spin" />
+                    <span>Researching and analyzing...</span>
+                  </div>
+                </MessageContent>
+              </Message>
             </div>
           )}
 
