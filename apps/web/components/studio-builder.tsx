@@ -2,6 +2,14 @@
 
 import Link from "next/link";
 import { useState, useTransition } from "react";
+import {
+  Sparkles,
+  FileCode,
+  Server,
+  CheckCircle,
+  ExternalLink,
+  Loader2,
+} from "lucide-react";
 
 import {
   DEFAULT_HARNESS_PROMPT,
@@ -34,9 +42,12 @@ export function StudioBuilder({ initialModel, provider }: StudioBuilderProps) {
         </p>
       </div>
 
-      <div className="grid grid--2" style={{ alignItems: "start", marginBottom: "32px" }}>
+      <div className="grid grid--2" style={{ alignItems: "start", marginBottom: "var(--space-11)" }}>
         <div className="block">
-          <div className="block__eyebrow">Prompt</div>
+          <div style={{ display: "flex", alignItems: "center", gap: "var(--space-5)", marginBottom: "var(--space-5)" }}>
+            <Sparkles size={14} className="text-muted" />
+            <div className="block__eyebrow" style={{ marginBottom: 0 }}>Prompt</div>
+          </div>
           <div className="block__title">Describe the agent</div>
           <div className="block__description">
             What should this agent do? Be specific about tools, memory, and behavior.
@@ -81,11 +92,21 @@ export function StudioBuilder({ initialModel, provider }: StudioBuilderProps) {
                 }
                 disabled={isPending || !prompt.trim()}
               >
-                {isPending ? "Generating..." : "Generate Agent"}
+                {isPending ? (
+                  <>
+                    <Loader2 size={14} className="animate-spin" />
+                    Generating...
+                  </>
+                ) : (
+                  <>
+                    <Sparkles size={14} />
+                    Generate Agent
+                  </>
+                )}
               </button>
             </div>
             {generationError && (
-              <div style={{ marginTop: "12px", padding: "12px", background: "rgba(238, 0, 0, 0.1)", border: "1px solid rgba(238, 0, 0, 0.2)", borderRadius: "var(--radius-md)", color: "var(--color-danger)", fontSize: "14px" }}>
+              <div style={{ marginTop: "var(--space-7)", padding: "var(--space-7)", background: "rgba(238, 0, 0, 0.1)", border: "1px solid rgba(238, 0, 0, 0.2)", borderRadius: "var(--radius-sm)", color: "var(--color-danger)", fontSize: "var(--font-size-md, 14px)" }}>
                 {generationError}
               </div>
             )}
@@ -93,7 +114,10 @@ export function StudioBuilder({ initialModel, provider }: StudioBuilderProps) {
         </div>
 
         <div className="block">
-          <div className="block__eyebrow">Generated Contract</div>
+          <div style={{ display: "flex", alignItems: "center", gap: "var(--space-5)", marginBottom: "var(--space-5)" }}>
+            <FileCode size={14} className="text-muted" />
+            <div className="block__eyebrow" style={{ marginBottom: 0 }}>Generated Contract</div>
+          </div>
           <div className="block__title">Agent shape</div>
           <div className="block__description">
             The contract defines tools, memory, model, and run policy.
@@ -110,20 +134,23 @@ export function StudioBuilder({ initialModel, provider }: StudioBuilderProps) {
         </div>
       </div>
 
-      <div className="block" style={{ marginBottom: "32px" }}>
-        <div className="block__eyebrow">Provider</div>
+      <div className="block" style={{ marginBottom: "var(--space-11)" }}>
+        <div style={{ display: "flex", alignItems: "center", gap: "var(--space-5)", marginBottom: "var(--space-5)" }}>
+          <Server size={14} className="text-muted" />
+          <div className="block__eyebrow" style={{ marginBottom: 0 }}>Provider</div>
+        </div>
         <div className="block__title">OpenRouter runtime readiness</div>
         <div className="grid grid--3 mt-4">
-          <div style={{ padding: "12px", background: "var(--color-base)", border: "1px solid var(--color-border)", borderRadius: "var(--radius-md)" }}>
-            <div className="text-xs text-muted">Provider</div>
+          <div className="stat-block">
+            <div className="stat-block__label">Provider</div>
             <div className="font-mono mt-2">{provider.provider}</div>
           </div>
-          <div style={{ padding: "12px", background: "var(--color-base)", border: "1px solid var(--color-border)", borderRadius: "var(--radius-md)" }}>
-            <div className="text-xs text-muted">Model</div>
+          <div className="stat-block">
+            <div className="stat-block__label">Model</div>
             <div className="font-mono mt-2">{provider.model}</div>
           </div>
-          <div style={{ padding: "12px", background: "var(--color-base)", border: "1px solid var(--color-border)", borderRadius: "var(--radius-md)" }}>
-            <div className="text-xs text-muted">Status</div>
+          <div className="stat-block">
+            <div className="stat-block__label">Status</div>
             <div className="mt-2">
               <span className={`badge ${provider.configured ? "badge--success" : "badge--warning"}`}>
                 {provider.configured ? "configured" : "no api key"}
@@ -133,24 +160,33 @@ export function StudioBuilder({ initialModel, provider }: StudioBuilderProps) {
         </div>
       </div>
 
-      <div className="grid grid--4" style={{ marginBottom: "32px" }}>
+      <div className="grid grid--4" style={{ marginBottom: "var(--space-11)" }}>
         {[
-          { kind: "Prompt", title: "Request", detail: model.assignment.request.prompt },
-          { kind: "Harness", title: "Assignment", detail: `Assigned to ${workItem.assignedAgent}` },
-          { kind: "Task", title: "Runtime", detail: `Task ${task.id}` },
-          { kind: "Agent", title: "Output", detail: `Generated ${agent.name}` },
-        ].map((block) => (
-          <div key={block.title} className="block">
-            <div className="block__eyebrow">{block.kind}</div>
-            <div className="block__title">{block.title}</div>
-            <div className="block__description">{block.detail}</div>
-          </div>
-        ))}
+          { kind: "Prompt", title: "Request", detail: model.assignment.request.prompt, icon: FileCode },
+          { kind: "Harness", title: "Assignment", detail: `Assigned to ${workItem.assignedAgent}`, icon: Server },
+          { kind: "Task", title: "Runtime", detail: `Task ${task.id}`, icon: CheckCircle },
+          { kind: "Agent", title: "Output", detail: `Generated ${agent.name}`, icon: Sparkles },
+        ].map((block) => {
+          const Icon = block.icon;
+          return (
+            <div key={block.title} className="block">
+              <div style={{ display: "flex", alignItems: "center", gap: "var(--space-5)", marginBottom: "var(--space-5)" }}>
+                <Icon size={14} className="text-muted" />
+                <div className="block__eyebrow" style={{ marginBottom: 0 }}>{block.kind}</div>
+              </div>
+              <div className="block__title">{block.title}</div>
+              <div className="block__description">{block.detail}</div>
+            </div>
+          );
+        })}
       </div>
 
-      <div className="grid grid--3" style={{ marginBottom: "32px" }}>
+      <div className="grid grid--3" style={{ marginBottom: "var(--space-11)" }}>
         <div className="block">
-          <div className="block__eyebrow">Work Item</div>
+          <div style={{ display: "flex", alignItems: "center", gap: "var(--space-5)", marginBottom: "var(--space-5)" }}>
+            <ExternalLink size={14} className="text-muted" />
+            <div className="block__eyebrow" style={{ marginBottom: 0 }}>Work Item</div>
+          </div>
           <div className="block__title">Created</div>
           <div className="block__description">
             {workItem.id} maps {model.assignment.request.id} into a generation task.
@@ -166,7 +202,10 @@ export function StudioBuilder({ initialModel, provider }: StudioBuilderProps) {
         </div>
 
         <div className="block">
-          <div className="block__eyebrow">State Sync</div>
+          <div style={{ display: "flex", alignItems: "center", gap: "var(--space-5)", marginBottom: "var(--space-5)" }}>
+            <CheckCircle size={14} className="text-muted" />
+            <div className="block__eyebrow" style={{ marginBottom: 0 }}>State Sync</div>
+          </div>
           <div className="block__title">Aligned</div>
           <div className="block__description">
             Runtime task, agent, and Studio state stay synchronized.
@@ -177,7 +216,10 @@ export function StudioBuilder({ initialModel, provider }: StudioBuilderProps) {
         </div>
 
         <div className="block">
-          <div className="block__eyebrow">LLM</div>
+          <div style={{ display: "flex", alignItems: "center", gap: "var(--space-5)", marginBottom: "var(--space-5)" }}>
+            <Server size={14} className="text-muted" />
+            <div className="block__eyebrow" style={{ marginBottom: 0 }}>LLM</div>
+          </div>
           <div className="block__title">OpenRouter first</div>
           <div className="block__description">
             Provider {agent.model.provider} with open-source model {agent.model.model}.
@@ -189,7 +231,10 @@ export function StudioBuilder({ initialModel, provider }: StudioBuilderProps) {
       </div>
 
       <div className="block">
-        <div className="block__eyebrow">Events</div>
+        <div style={{ display: "flex", alignItems: "center", gap: "var(--space-5)", marginBottom: "var(--space-5)" }}>
+          <CheckCircle size={14} className="text-muted" />
+          <div className="block__eyebrow" style={{ marginBottom: 0 }}>Events</div>
+        </div>
         <div className="block__title">Task events</div>
         <div className="block__content">
           <div className="timeline">
