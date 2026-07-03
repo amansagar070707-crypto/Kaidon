@@ -59,7 +59,7 @@ export function AppScaffold({ active, children }: AppScaffoldProps) {
         </>
       }
     >
-      {children}
+      {children as any}
     </AppShell>
   );
 }

@@ -7,7 +7,6 @@ import {
   Send,
   Star,
   Download,
-  ExternalLink,
   Copy,
   Check,
   FileText,
@@ -25,22 +24,27 @@ import {
 } from "../../../components/ai-elements/message";
 import {
   Reasoning,
-} from "../../../components/ai-elements/index";
+  ReasoningTrigger,
+  ReasoningContent,
+} from "../../../components/ai-elements/reasoning";
 import {
   Sources,
+  SourcesTrigger,
+  SourcesContent,
   Source,
-} from "../../../components/ai-elements/index";
+} from "../../../components/ai-elements/sources";
 import {
   ChainOfThought,
+  ChainOfThoughtHeader,
   ChainOfThoughtStep,
-} from "../../../components/ai-elements/index";
+  ChainOfThoughtContent,
+} from "../../../components/ai-elements/chain-of-thought";
 import {
   Task,
+  TaskTrigger,
+  TaskContent,
   TaskItem,
-} from "../../../components/ai-elements/index";
-import {
-  Context,
-} from "../../../components/ai-elements/index";
+} from "../../../components/ai-elements/task";
 
 type AgentStatus = "approved" | "pending" | "community" | "deprecated";
 
@@ -68,7 +72,6 @@ type Message = {
   sources?: { title: string; url: string }[];
   steps?: { label: string; description?: string; status: "complete" | "active" | "pending" }[];
   tasks?: { title: string; items: { text: string; completed: boolean }[] }[];
-  tokens?: { used: number; max: number };
 };
 
 const agents: Record<string, Agent> = {
@@ -134,8 +137,31 @@ const sampleResponses: Record<string, (query: string) => Message> = {
   "job-search-agent": (query) => ({
     id: `msg_${Date.now()}`,
     role: "assistant",
-    content: `I've searched across LinkedIn, Wellfound, and Greenhouse for AI engineer roles matching your criteria. Found 5 strong matches with remote-friendly positions and competitive compensation.\n\n## Top Matches\n\n| Company | Role | Location | Salary | Match |\n|---------|------|----------|--------|-------|\n| Anthropic | AI Engineer | Remote | $180-250k | 94% |\n| OpenAI | Research Engineer | San Francisco | $200-300k | 91% |\n| Google DeepMind | ML Engineer | Mountain View | $190-280k | 88% |\n| Meta AI | AI Platform Engineer | Remote | $170-240k | 85% |\n| Cohere | Applied Scientist | Toronto/Remote | $150-220k | 82% |\n\n## Recommended Actions\n\n- Apply to Anthropic and OpenAI first - highest match scores\n- Update your LinkedIn profile with "AI Engineer" keywords\n- Prepare a portfolio showcasing LLM/agent work\n- Set up job alerts on Wellfound for startup opportunities`,
-    reasoning: `Analyzing the user's query: "${query}"\n\n1. Understanding intent: Looking for AI engineering roles in 2026\n2. Search strategy: Query LinkedIn Jobs, Wellfound, and Greenhouse APIs\n3. Filtering criteria: Remote-friendly, competitive salary, AI/ML focus\n4. Ranking factors: Company reputation, role fit, compensation, location\n5. Output format: Table with key metrics and actionable recommendations`,
+    content: `I've searched across LinkedIn, Wellfound, and Greenhouse for AI engineer roles matching your criteria. Found 5 strong matches with remote-friendly positions and competitive compensation.
+
+## Top Matches
+
+| Company | Role | Location | Salary | Match |
+|---------|------|----------|--------|-------|
+| Anthropic | AI Engineer | Remote | $180-250k | 94% |
+| OpenAI | Research Engineer | San Francisco | $200-300k | 91% |
+| Google DeepMind | ML Engineer | Mountain View | $190-280k | 88% |
+| Meta AI | AI Platform Engineer | Remote | $170-240k | 85% |
+| Cohere | Applied Scientist | Toronto/Remote | $150-220k | 82% |
+
+## Recommended Actions
+
+- Apply to Anthropic and OpenAI first - highest match scores
+- Update your LinkedIn profile with "AI Engineer" keywords
+- Prepare a portfolio showcasing LLM/agent work
+- Set up job alerts on Wellfound for startup opportunities`,
+    reasoning: `Analyzing the user's query: "${query}"
+
+1. Understanding intent: Looking for AI engineering roles in 2026
+2. Search strategy: Query LinkedIn Jobs, Wellfound, and Greenhouse APIs
+3. Filtering criteria: Remote-friendly, competitive salary, AI/ML focus
+4. Ranking factors: Company reputation, role fit, compensation, location
+5. Output format: Table with key metrics and actionable recommendations`,
     sources: [
       { title: "LinkedIn Jobs - AI Engineer", url: "https://linkedin.com/jobs/search?keywords=ai+engineer" },
       { title: "Wellfound - AI/ML Roles", url: "https://wellfound.com/role?q=ai+engineer" },
@@ -159,14 +185,34 @@ const sampleResponses: Record<string, (query: string) => Message> = {
         ],
       },
     ],
-    tokens: { used: 2847, max: 8192 },
     timestamp: new Date().toISOString(),
   }),
   "billing-reconcile-agent": (query) => ({
     id: `msg_${Date.now()}`,
     role: "assistant",
-    content: `I've analyzed your billing records for Q1 2026. Found 3 discrepancies totaling $2,450.00.\n\n## Reconciliation Summary\n\n| Invoice | Stripe | Ledger | Difference | Status |\n|---------|--------|--------|------------|--------|\n| INV-2026-001 | $1,200 | $1,200 | $0 | Matched |\n| INV-2026-002 | $3,500 | $1,050 | $2,450 | Mismatch |\n| INV-2026-003 | $890 | $890 | $0 | Matched |\n| INV-2026-004 | $2,100 | $2,100 | $0 | Matched |\n\n## Issues Found\n\n- **INV-2026-002**: Stripe shows $3,500 but ledger only recorded $1,050 - possible partial payment not synced\n- Missing webhook event for payment on 2026-01-15\n- Tax calculation discrepancy on international invoice INV-2026-005`,
-    reasoning: `Processing billing reconciliation query: "${query}"\n\n1. Loading Stripe transaction history for Q1 2026\n2. Loading ledger entries from accounting system\n3. Matching transactions by invoice ID and amount\n4. Flagging mismatches for manual review\n5. Calculating total discrepancy amount`,
+    content: `I've analyzed your billing records for Q1 2026. Found 3 discrepancies totaling $2,450.00.
+
+## Reconciliation Summary
+
+| Invoice | Stripe | Ledger | Difference | Status |
+|---------|--------|--------|------------|--------|
+| INV-2026-001 | $1,200 | $1,200 | $0 | Matched |
+| INV-2026-002 | $3,500 | $1,050 | $2,450 | Mismatch |
+| INV-2026-003 | $890 | $890 | $0 | Matched |
+| INV-2026-004 | $2,100 | $2,100 | $0 | Matched |
+
+## Issues Found
+
+- **INV-2026-002**: Stripe shows $3,500 but ledger only recorded $1,050 - possible partial payment not synced
+- Missing webhook event for payment on 2026-01-15
+- Tax calculation discrepancy on international invoice INV-2026-005`,
+    reasoning: `Processing billing reconciliation query: "${query}"
+
+1. Loading Stripe transaction history for Q1 2026
+2. Loading ledger entries from accounting system
+3. Matching transactions by invoice ID and amount
+4. Flagging mismatches for manual review
+5. Calculating total discrepancy amount`,
     sources: [
       { title: "Stripe Dashboard", url: "https://dashboard.stripe.com" },
       { title: "QuickBooks Ledger", url: "https://quickbooks.intuit.com" },
@@ -189,7 +235,6 @@ const sampleResponses: Record<string, (query: string) => Message> = {
         ],
       },
     ],
-    tokens: { used: 1923, max: 8192 },
     timestamp: new Date().toISOString(),
   }),
 };
@@ -238,7 +283,6 @@ export default function AgentDetailPage({ params }: { params: Promise<{ slug: st
     setInput("");
     setIsRunning(true);
 
-    // Simulate agent processing
     await new Promise((resolve) => setTimeout(resolve, 1500 + Math.random() * 1000));
 
     const sampleData = sampleResponses[resolvedParams.slug];
@@ -255,7 +299,6 @@ export default function AgentDetailPage({ params }: { params: Promise<{ slug: st
             { label: "Processing data", status: "complete" as const },
             { label: "Generating response", status: "complete" as const },
           ],
-          tokens: { used: 1200, max: 8192 },
         };
 
     setMessages((prev) => [...prev, assistantMessage]);
@@ -362,7 +405,6 @@ export default function AgentDetailPage({ params }: { params: Promise<{ slug: st
 
       {/* Chat Interface */}
       <div className="agent-chat">
-        {/* Messages */}
         <div className="agent-chat__messages">
           {messages.length === 0 && (
             <div className="agent-chat__empty">
@@ -378,23 +420,23 @@ export default function AgentDetailPage({ params }: { params: Promise<{ slug: st
             <div key={message.id} className="ai-message-wrapper">
               <Message from={message.role}>
                 <MessageContent>
-                  {/* Reasoning Block */}
+                  {/* Reasoning */}
                   {message.reasoning && (
-                    <Reasoning defaultOpen={false}>
-                      <div className="ai-reasoning__text">
-                        {message.reasoning.split("\n").map((line, i) => (
-                          <p key={i}>{line}</p>
-                        ))}
-                      </div>
+                    <Reasoning>
+                      <ReasoningTrigger />
+                      <ReasoningContent>{message.reasoning}</ReasoningContent>
                     </Reasoning>
                   )}
 
                   {/* Sources */}
                   {message.sources && message.sources.length > 0 && (
                     <Sources>
-                      {message.sources.map((src, i) => (
-                        <Source key={i} href={src.url} title={src.title} />
-                      ))}
+                      <SourcesTrigger count={message.sources.length} />
+                      <SourcesContent>
+                        {message.sources.map((src, i) => (
+                          <Source key={i} href={src.url} title={src.title} />
+                        ))}
+                      </SourcesContent>
                     </Sources>
                   )}
 
@@ -403,15 +445,18 @@ export default function AgentDetailPage({ params }: { params: Promise<{ slug: st
 
                   {/* Chain of Thought */}
                   {message.steps && message.steps.length > 0 && (
-                    <ChainOfThought defaultOpen={false}>
-                      {message.steps.map((step, i) => (
-                        <ChainOfThoughtStep
-                          key={i}
-                          label={step.label}
-                          description={step.description}
-                          status={step.status}
-                        />
-                      ))}
+                    <ChainOfThought>
+                      <ChainOfThoughtHeader />
+                      <ChainOfThoughtContent>
+                        {message.steps.map((step, i) => (
+                          <ChainOfThoughtStep
+                            key={i}
+                            label={step.label}
+                            description={step.description}
+                            status={step.status}
+                          />
+                        ))}
+                      </ChainOfThoughtContent>
                     </ChainOfThought>
                   )}
 
@@ -419,23 +464,20 @@ export default function AgentDetailPage({ params }: { params: Promise<{ slug: st
                   {message.tasks && message.tasks.length > 0 && (
                     <div className="ai-tasks-section">
                       {message.tasks.map((task, i) => (
-                        <Task key={i} defaultOpen={false}>
-                          <span className="ai-task__title">{task.title}</span>
-                          <div className="ai-task__items">
+                        <Task key={i} defaultOpen={i === 0}>
+                          <TaskTrigger title={task.title} />
+                          <TaskContent>
                             {task.items.map((item, j) => (
-                              <TaskItem key={j} completed={item.completed}>
-                                {item.text}
+                              <TaskItem key={j}>
+                                <span className={item.completed ? "text-green-400 line-through" : ""}>
+                                  {item.completed ? "✓" : "○"} {item.text}
+                                </span>
                               </TaskItem>
                             ))}
-                          </div>
+                          </TaskContent>
                         </Task>
                       ))}
                     </div>
-                  )}
-
-                  {/* Token Usage */}
-                  {message.tokens && (
-                    <Context maxTokens={message.tokens.max} usedTokens={message.tokens.used} />
                   )}
                 </MessageContent>
               </Message>
@@ -444,10 +486,10 @@ export default function AgentDetailPage({ params }: { params: Promise<{ slug: st
               {message.role === "assistant" && (
                 <MessageActions>
                   <MessageAction
+                    tooltip={copiedId === message.id ? "Copied" : "Copy"}
                     onClick={() => copyToClipboard(message.content, message.id)}
-                    label={copiedId === message.id ? "Copied" : "Copy"}
                   >
-                    {copiedId === message.id ? <Check size={12} /> : <Copy size={12} />}
+                    {copiedId === message.id ? <Check size={14} /> : <Copy size={14} />}
                   </MessageAction>
                 </MessageActions>
               )}
