@@ -11,7 +11,9 @@ import {
   Filter,
   ChevronDown,
   X,
+  ArrowRight,
 } from "lucide-react";
+import Link from "next/link";
 
 type AgentStatus = "approved" | "pending" | "community" | "deprecated";
 
@@ -336,6 +338,22 @@ export default function MarketplacePage() {
                 <span key={tag} className="card-tag">#{tag}</span>
               ))}
             </div>
+
+            {/* Use Agent Button */}
+            {agent.status === "approved" && (
+              <Link
+                href={`/marketplace/${agent.slug}`}
+                className="btn btn--primary btn--full mt-3"
+              >
+                Use Agent
+                <ArrowRight size={14} />
+              </Link>
+            )}
+            {agent.status !== "approved" && (
+              <div className="mt-3 text-sm text-muted" style={{ fontStyle: "italic" }}>
+                {agent.status === "pending" ? "Pending approval" : agent.status === "deprecated" ? "Deprecated" : "Community - use at own risk"}
+              </div>
+            )}
           </div>
         ))}
       </div>
