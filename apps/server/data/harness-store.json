@@ -1,0 +1,434 @@
+[
+  {
+    "assignment": {
+      "request": {
+        "id": "req_1783060881782",
+        "prompt": "Generate a support agent that handles billing questions, uses workspace memory, and requires approval before refunds above $250.",
+        "requestedBy": "studio-user",
+        "createdAt": "2026-07-03T06:41:21.782Z"
+      },
+      "workItem": {
+        "id": "work_generate-a-support-agent-that-handles-bi",
+        "requestId": "req_1783060881782",
+        "title": "Generate generate-a-support-agent-that-handles-bi",
+        "summary": "Generate a support agent that handles billing questions, uses workspace memory, and requires approval before refunds above $250.",
+        "assignedAgent": "agent-builder",
+        "status": "generating"
+      },
+      "generatedAgent": {
+        "id": "generate-a-support-agent-that-handles-bi",
+        "name": "generate-a-support-agent-that-handles-bi",
+        "version": "0.1.0",
+        "description": "Generate a support agent that handles billing questions, uses workspace memory, and requires approval before refunds above $250.",
+        "model": {
+          "provider": "openrouter",
+          "model": "moonshotai/kimi-k2:free",
+          "family": "open-source"
+        },
+        "tools": [
+          {
+            "id": "tool_billing",
+            "name": "Billing lookup",
+            "required": true
+          },
+          {
+            "id": "tool_approval",
+            "name": "Approval",
+            "required": true
+          }
+        ],
+        "memory": {
+          "scope": "workspace",
+          "retentionDays": 30,
+          "encrypted": true
+        },
+        "status": "ready"
+      },
+      "task": {
+        "id": "task_generate-a-support-agent-that-handles-bi_1783060881783",
+        "agent": {
+          "id": "generate-a-support-agent-that-handles-bi",
+          "name": "generate-a-support-agent-that-handles-bi",
+          "version": "0.1.0",
+          "description": "Generate a support agent that handles billing questions, uses workspace memory, and requires approval before refunds above $250.",
+          "model": {
+            "provider": "openrouter",
+            "model": "moonshotai/kimi-k2:free",
+            "family": "open-source"
+          },
+          "tools": [
+            {
+              "id": "tool_billing",
+              "name": "Billing lookup",
+              "required": true
+            },
+            {
+              "id": "tool_approval",
+              "name": "Approval",
+              "required": true
+            }
+          ],
+          "memory": {
+            "scope": "workspace",
+            "retentionDays": 30,
+            "encrypted": true
+          },
+          "status": "ready"
+        },
+        "status": "queued",
+        "input": {
+          "requestId": "req_1783060881782",
+          "workItemId": "work_generate-a-support-agent-that-handles-bi",
+          "prompt": "Generate a support agent that handles billing questions, uses workspace memory, and requires approval before refunds above $250."
+        },
+        "checkpoints": [],
+        "events": [
+          {
+            "type": "task.created",
+            "at": "2026-07-03T06:41:21.783Z",
+            "message": "Task created for generate-a-support-agent-that-handles-bi."
+          }
+        ],
+        "updatedAt": "2026-07-03T06:41:21.783Z"
+      }
+    },
+    "generation": {
+      "source": "fallback"
+    },
+    "runningTask": {
+      "id": "task_generate-a-support-agent-that-handles-bi_1783060881783",
+      "agent": {
+        "id": "generate-a-support-agent-that-handles-bi",
+        "name": "generate-a-support-agent-that-handles-bi",
+        "version": "0.1.0",
+        "description": "Generate a support agent that handles billing questions, uses workspace memory, and requires approval before refunds above $250.",
+        "model": {
+          "provider": "openrouter",
+          "model": "moonshotai/kimi-k2:free",
+          "family": "open-source"
+        },
+        "tools": [
+          {
+            "id": "tool_billing",
+            "name": "Billing lookup",
+            "required": true
+          },
+          {
+            "id": "tool_approval",
+            "name": "Approval",
+            "required": true
+          }
+        ],
+        "memory": {
+          "scope": "workspace",
+          "retentionDays": 30,
+          "encrypted": true
+        },
+        "status": "ready"
+      },
+      "status": "running",
+      "input": {
+        "requestId": "req_1783060881782",
+        "workItemId": "work_generate-a-support-agent-that-handles-bi",
+        "prompt": "Generate a support agent that handles billing questions, uses workspace memory, and requires approval before refunds above $250."
+      },
+      "checkpoints": [],
+      "events": [
+        {
+          "type": "task.created",
+          "at": "2026-07-03T06:41:21.783Z",
+          "message": "Task created for generate-a-support-agent-that-handles-bi."
+        },
+        {
+          "type": "task.started",
+          "at": "2026-07-03T06:41:21.783Z",
+          "message": "Task picked up by runtime."
+        }
+      ],
+      "updatedAt": "2026-07-03T06:41:21.783Z"
+    },
+    "checkpointedTask": {
+      "id": "task_generate-a-support-agent-that-handles-bi_1783060881783",
+      "agent": {
+        "id": "generate-a-support-agent-that-handles-bi",
+        "name": "generate-a-support-agent-that-handles-bi",
+        "version": "0.1.0",
+        "description": "Generate a support agent that handles billing questions, uses workspace memory, and requires approval before refunds above $250.",
+        "model": {
+          "provider": "openrouter",
+          "model": "moonshotai/kimi-k2:free",
+          "family": "open-source"
+        },
+        "tools": [
+          {
+            "id": "tool_billing",
+            "name": "Billing lookup",
+            "required": true
+          },
+          {
+            "id": "tool_approval",
+            "name": "Approval",
+            "required": true
+          }
+        ],
+        "memory": {
+          "scope": "workspace",
+          "retentionDays": 30,
+          "encrypted": true
+        },
+        "status": "ready"
+      },
+      "status": "running",
+      "input": {
+        "requestId": "req_1783060881782",
+        "workItemId": "work_generate-a-support-agent-that-handles-bi",
+        "prompt": "Generate a support agent that handles billing questions, uses workspace memory, and requires approval before refunds above $250."
+      },
+      "checkpoints": [
+        {
+          "id": "cp_task_generate-a-support-agent-that-handles-bi_1783060881783_1",
+          "status": "running",
+          "at": "2026-07-03T06:41:21.783Z",
+          "note": "Billing lookup checkpoint saved."
+        }
+      ],
+      "events": [
+        {
+          "type": "task.created",
+          "at": "2026-07-03T06:41:21.783Z",
+          "message": "Task created for generate-a-support-agent-that-handles-bi."
+        },
+        {
+          "type": "task.started",
+          "at": "2026-07-03T06:41:21.783Z",
+          "message": "Task picked up by runtime."
+        },
+        {
+          "type": "task.updated",
+          "at": "2026-07-03T06:41:21.783Z",
+          "message": "Checkpoint saved: Billing lookup checkpoint saved."
+        }
+      ],
+      "updatedAt": "2026-07-03T06:41:21.783Z"
+    },
+    "retriedTask": {
+      "id": "task_generate-a-support-agent-that-handles-bi_1783060881783",
+      "agent": {
+        "id": "generate-a-support-agent-that-handles-bi",
+        "name": "generate-a-support-agent-that-handles-bi",
+        "version": "0.1.0",
+        "description": "Generate a support agent that handles billing questions, uses workspace memory, and requires approval before refunds above $250.",
+        "model": {
+          "provider": "openrouter",
+          "model": "moonshotai/kimi-k2:free",
+          "family": "open-source"
+        },
+        "tools": [
+          {
+            "id": "tool_billing",
+            "name": "Billing lookup",
+            "required": true
+          },
+          {
+            "id": "tool_approval",
+            "name": "Approval",
+            "required": true
+          }
+        ],
+        "memory": {
+          "scope": "workspace",
+          "retentionDays": 30,
+          "encrypted": true
+        },
+        "status": "ready"
+      },
+      "status": "queued",
+      "input": {
+        "requestId": "req_1783060881782",
+        "workItemId": "work_generate-a-support-agent-that-handles-bi",
+        "prompt": "Generate a support agent that handles billing questions, uses workspace memory, and requires approval before refunds above $250."
+      },
+      "checkpoints": [
+        {
+          "id": "cp_task_generate-a-support-agent-that-handles-bi_1783060881783_1",
+          "status": "running",
+          "at": "2026-07-03T06:41:21.783Z",
+          "note": "Billing lookup checkpoint saved."
+        },
+        {
+          "id": "cp_task_generate-a-support-agent-that-handles-bi_1783060881783_2",
+          "status": "running",
+          "at": "2026-07-03T06:41:21.783Z",
+          "note": "retry requested: Awaiting billing service timeout."
+        }
+      ],
+      "events": [
+        {
+          "type": "task.created",
+          "at": "2026-07-03T06:41:21.783Z",
+          "message": "Task created for generate-a-support-agent-that-handles-bi."
+        },
+        {
+          "type": "task.started",
+          "at": "2026-07-03T06:41:21.783Z",
+          "message": "Task picked up by runtime."
+        },
+        {
+          "type": "task.updated",
+          "at": "2026-07-03T06:41:21.783Z",
+          "message": "Checkpoint saved: Billing lookup checkpoint saved."
+        },
+        {
+          "type": "task.updated",
+          "at": "2026-07-03T06:41:21.783Z",
+          "message": "Checkpoint saved: retry requested: Awaiting billing service timeout."
+        },
+        {
+          "type": "task.updated",
+          "at": "2026-07-03T06:41:21.783Z",
+          "message": "Task moved back to queue: Awaiting billing service timeout."
+        }
+      ],
+      "updatedAt": "2026-07-03T06:41:21.783Z"
+    },
+    "canceledTask": {
+      "id": "task_generate-a-support-agent-that-handles-bi_1783060881783",
+      "agent": {
+        "id": "generate-a-support-agent-that-handles-bi",
+        "name": "generate-a-support-agent-that-handles-bi",
+        "version": "0.1.0",
+        "description": "Generate a support agent that handles billing questions, uses workspace memory, and requires approval before refunds above $250.",
+        "model": {
+          "provider": "openrouter",
+          "model": "moonshotai/kimi-k2:free",
+          "family": "open-source"
+        },
+        "tools": [
+          {
+            "id": "tool_billing",
+            "name": "Billing lookup",
+            "required": true
+          },
+          {
+            "id": "tool_approval",
+            "name": "Approval",
+            "required": true
+          }
+        ],
+        "memory": {
+          "scope": "workspace",
+          "retentionDays": 30,
+          "encrypted": true
+        },
+        "status": "ready"
+      },
+      "status": "canceled",
+      "input": {
+        "requestId": "req_1783060881782",
+        "workItemId": "work_generate-a-support-agent-that-handles-bi",
+        "prompt": "Generate a support agent that handles billing questions, uses workspace memory, and requires approval before refunds above $250."
+      },
+      "checkpoints": [
+        {
+          "id": "cp_task_generate-a-support-agent-that-handles-bi_1783060881783_1",
+          "status": "running",
+          "at": "2026-07-03T06:41:21.783Z",
+          "note": "Billing lookup checkpoint saved."
+        },
+        {
+          "id": "cp_task_generate-a-support-agent-that-handles-bi_1783060881783_2",
+          "status": "running",
+          "at": "2026-07-03T06:41:21.783Z",
+          "note": "retry requested: Awaiting billing service timeout."
+        }
+      ],
+      "events": [
+        {
+          "type": "task.created",
+          "at": "2026-07-03T06:41:21.783Z",
+          "message": "Task created for generate-a-support-agent-that-handles-bi."
+        },
+        {
+          "type": "task.started",
+          "at": "2026-07-03T06:41:21.783Z",
+          "message": "Task picked up by runtime."
+        },
+        {
+          "type": "task.updated",
+          "at": "2026-07-03T06:41:21.783Z",
+          "message": "Checkpoint saved: Billing lookup checkpoint saved."
+        },
+        {
+          "type": "task.updated",
+          "at": "2026-07-03T06:41:21.783Z",
+          "message": "Checkpoint saved: retry requested: Awaiting billing service timeout."
+        },
+        {
+          "type": "task.updated",
+          "at": "2026-07-03T06:41:21.783Z",
+          "message": "Task moved back to queue: Awaiting billing service timeout."
+        },
+        {
+          "type": "task.canceled",
+          "at": "2026-07-03T06:41:21.783Z",
+          "message": "Task canceled: User closed request."
+        }
+      ],
+      "updatedAt": "2026-07-03T06:41:21.783Z"
+    },
+    "enabledTools": [
+      {
+        "id": "tool_billing",
+        "name": "Billing lookup",
+        "description": "Lookup invoices and payment state.",
+        "scope": "workspace",
+        "transport": "mcp",
+        "permissions": [
+          "read"
+        ],
+        "version": "0.1.0"
+      },
+      {
+        "id": "tool_approval",
+        "name": "Approval",
+        "description": "Send approval requests for high-impact actions.",
+        "scope": "workspace",
+        "transport": "http",
+        "permissions": [
+          "approve"
+        ],
+        "version": "0.1.0"
+      }
+    ],
+    "contextSnapshot": {
+      "agentId": "generate-a-support-agent-that-handles-bi",
+      "summary": "Workspace context preserved for current support workflow.",
+      "items": [
+        {
+          "id": "mem_1",
+          "scope": "workspace",
+          "content": "Billing lookup allowed for support escalation.",
+          "source": "task_generate-a-support-agent-that-handles-bi_1783060881783"
+        },
+        {
+          "id": "mem_2",
+          "scope": "session",
+          "content": "Customer ticket asks for invoice correction.",
+          "source": "task_generate-a-support-agent-that-handles-bi_1783060881783"
+        }
+      ],
+      "budget": {
+        "maxTokens": 8192,
+        "reservedTokens": 1024,
+        "compressionEnabled": true
+      },
+      "policy": {
+        "scope": "workspace",
+        "retentionDays": 30,
+        "encrypted": true,
+        "allowRetrieval": true
+      }
+    },
+    "visibleContextTokens": 128
+  }
+]

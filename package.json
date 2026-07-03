@@ -1,0 +1,27 @@
+{
+  "name": "kaidon",
+  "private": true,
+  "version": "0.1.0",
+  "packageManager": "pnpm@9.15.0",
+  "devDependencies": {
+    "tsx": "^4.19.2",
+    "typescript": "^5.6.3"
+  },
+  "scripts": {
+    "build": "corepack pnpm -r build",
+    "clean": "powershell -NoProfile -Command \"Remove-Item -Recurse -Force apps/web/.next -ErrorAction SilentlyContinue; Remove-Item -Recurse -Force apps/web/tsconfig.tsbuildinfo -ErrorAction SilentlyContinue; Remove-Item -Recurse -Force apps/server/tsconfig.tsbuildinfo -ErrorAction SilentlyContinue\"",
+    "dev": "powershell -NoProfile -ExecutionPolicy Bypass -File .\\scripts\\dev.ps1",
+    "dev:server": "corepack pnpm --filter @kaidon/server dev",
+    "dev:web": "corepack pnpm --filter @kaidon/web dev",
+    "dev:backend": "docker compose build --no-cache server && docker compose up -d postgres redis server",
+    "dev:backend:down": "docker compose stop server redis postgres",
+    "dev:clean": "npm run clean && npm run dev",
+    "lint": "corepack pnpm -r lint",
+    "typecheck": "corepack pnpm -r typecheck",
+    "cli": "corepack pnpm --filter @kaidon/cli exec tsx src/index.ts",
+    "test:contracts": "corepack pnpm --filter @kaidon/apl test && corepack pnpm --filter @kaidon/runtime-protocol test && corepack pnpm --filter @kaidon/component-registry test"
+  },
+  "dependencies": {
+    "pg": "^8.22.0"
+  }
+}

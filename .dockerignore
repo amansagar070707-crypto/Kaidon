@@ -1,0 +1,12 @@
+node_modules
+.next
+dist
+coverage
+.git
+.gitignore
+.env
+.env.local
+.env.*.local
+apps/web/.next
+apps/*/node_modules
+packages/*/node_modules

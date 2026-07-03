@@ -1,0 +1,29 @@
+{
+  "id": "support-agent",
+  "name": "support-agent",
+  "version": "0.1.0",
+  "description": "Handles inbound support requests with billing context.",
+  "model": {
+    "provider": "openrouter",
+    "model": "moonshotai/kimi-k2:free",
+    "family": "open-source"
+  },
+  "tools": [
+    {
+      "id": "tool_email",
+      "name": "Email",
+      "required": true
+    },
+    {
+      "id": "tool_billing",
+      "name": "Billing lookup",
+      "required": true
+    }
+  ],
+  "memory": {
+    "scope": "workspace",
+    "retentionDays": 30,
+    "encrypted": true
+  },
+  "status": "ready"
+}

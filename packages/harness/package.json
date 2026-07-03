@@ -1,0 +1,21 @@
+{
+  "name": "@kaidon/harness",
+  "private": true,
+  "version": "0.1.0",
+  "main": "./src/index.ts",
+  "types": "./src/index.ts",
+  "scripts": {
+    "lint": "tsc --noEmit",
+    "typecheck": "tsc --noEmit",
+    "build": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@kaidon/apl": "workspace:*",
+    "@kaidon/llm": "workspace:*",
+    "@kaidon/runtime": "workspace:*",
+    "@kaidon/runtime-protocol": "workspace:*"
+  },
+  "devDependencies": {
+    "typescript": "^5.6.3"
+  }
+}

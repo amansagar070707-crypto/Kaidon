@@ -1,0 +1,29 @@
+{
+  "name": "@kaidon/web",
+  "private": true,
+  "version": "0.1.0",
+  "dependencies": {
+    "@kaidon/apl": "workspace:*",
+    "@kaidon/design-system": "workspace:*",
+    "@kaidon/harness": "workspace:*",
+    "@kaidon/llm": "workspace:*",
+    "@kaidon/memory": "workspace:*",
+    "@kaidon/runtime": "workspace:*",
+    "@kaidon/tools": "workspace:*",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "next": "^15.1.6"
+  },
+  "devDependencies": {
+    "@types/react": "^18.3.12",
+    "@types/react-dom": "^18.3.1",
+    "@types/node": "^20.17.6"
+  },
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "typecheck": "next typegen && tsc --noEmit"
+  }
+}
