@@ -323,7 +323,12 @@ async function executeHarnessRun(agentId, taskId, execution) {
     return;
   }
 
+  const apiKey = (process.env.OPENROUTER_API_KEY || "").trim();
+  const model = (process.env.OPENROUTER_MODEL || "moonshotai/kimi-k2:free").trim();
   const query = extractSearchQuery(entry.assignment.request.prompt);
+  const agent = entry.assignment.generatedAgent;
+  const useLiveApi = Boolean(apiKey);
+
   const steps = [
     {
       delayMs: 700,
@@ -340,16 +345,16 @@ async function executeHarnessRun(agentId, taskId, execution) {
       message: `Planner chose a search strategy for: ${query}`,
       progress: 28,
       completedSteps: 2,
-      currentStep: "Choosing the best job sources and search pattern.",
+      currentStep: "Choosing the best sources and search pattern.",
       status: "running",
     },
     {
       delayMs: 900,
       type: "search.source.started",
-      message: "Starting source scans across LinkedIn, Wellfound, and Greenhouse.",
+      message: "Starting source scans.",
       progress: 42,
       completedSteps: 3,
-      currentStep: "Scanning approved public job sources.",
+      currentStep: "Scanning approved public sources.",
       status: "running",
     },
   ];
@@ -376,11 +381,36 @@ async function executeHarnessRun(agentId, taskId, execution) {
   }
 
   let results = [];
+  let llmResponse = null;
 
-  try {
-    results = await fetchLiveSearchResults(query);
-  } catch {
-    results = buildFallbackSearchResults(query);
+  if (useLiveApi) {
+    try {
+      llmResponse = await callOpenRouterLLM(apiKey, model, {
+        system: `You are an AI agent named "${agent.name}". ${agent.description}\n\nYou have these tools: ${agent.tools.map((t) => t.name).join(", ")}.\n\nPerform the requested task and return a JSON result.`,
+        user: query,
+      });
+
+      if (llmResponse.ok) {
+        results = [
+          {
+            title: "LLM Analysis Result",
+            url: "https://openrouter.ai",
+            snippet: llmResponse.content.slice(0, 200),
+            source: "openrouter-llm",
+          },
+        ];
+      }
+    } catch (error) {
+      console.error("OpenRouter LLM call failed:", error.message);
+    }
+  }
+
+  if (results.length === 0) {
+    try {
+      results = await fetchLiveSearchResults(query);
+    } catch {
+      results = buildFallbackSearchResults(query);
+    }
   }
 
   let resultIndex = 0;
@@ -408,20 +438,46 @@ async function executeHarnessRun(agentId, taskId, execution) {
     broadcastRunSnapshot(agentId, taskId, "snapshot");
   }
 
+  let summaryResult = null;
+
+  if (useLiveApi && llmResponse?.ok) {
+    try {
+      const summaryResponse = await callOpenRouterLLM(apiKey, model, {
+        system: "You are a summarizer. Take the following analysis and create a concise summary with key findings. Return JSON with title, summary, and keyPoints array.",
+        user: `Original query: ${query}\n\nAnalysis:\n${llmResponse.content}`,
+      });
+
+      if (summaryResponse.ok) {
+        try {
+          summaryResult = JSON.parse(summaryResponse.content);
+        } catch {
+          summaryResult = {
+            title: "Summary",
+            summary: summaryResponse.content.slice(0, 500),
+            keyPoints: ["Analysis completed via OpenRouter LLM"],
+          };
+        }
+      }
+    } catch (error) {
+      console.error("Summary LLM call failed:", error.message);
+    }
+  }
+
   const finishSteps = [
     {
       delayMs: 700,
       type: "candidates.ranked",
-      message: "Ranked the strongest role matches.",
+      message: summaryResult?.summary || "Ranked the strongest matches.",
       progress: 88,
       completedSteps: 5,
       currentStep: "Ranking matches and removing weak results.",
       status: "running",
+      data: summaryResult,
     },
     {
       delayMs: 700,
       type: "outreach.prepared",
-      message: "Prepared shortlist and outreach notes.",
+      message: "Prepared shortlist and notes.",
       progress: 100,
       completedSteps: 6,
       currentStep: "Research complete.",
@@ -439,6 +495,7 @@ async function executeHarnessRun(agentId, taskId, execution) {
       type: step.type,
       at: new Date().toISOString(),
       message: step.message,
+      ...(step.data ? { data: step.data } : {}),
     });
     updateTaskProgress(agentId, taskId, {
       status: step.status,
@@ -462,6 +519,46 @@ function isCanceled(agentId, taskId) {
 
 function wait(delayMs) {
   return new Promise((resolve) => setTimeout(resolve, delayMs));
+}
+
+async function callOpenRouterLLM(apiKey, model, messages) {
+  const response = await fetch("https://openrouter.ai/api/v1/chat/completions", {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${apiKey}`,
+      "Content-Type": "application/json",
+      "HTTP-Referer": "http://localhost:3000",
+      "X-Title": "Kaidon Agent OS",
+    },
+    body: JSON.stringify({
+      model,
+      messages: [
+        { role: "system", content: messages.system },
+        { role: "user", content: messages.user },
+      ],
+      max_tokens: 2048,
+      temperature: 0.7,
+    }),
+  });
+
+  if (!response.ok) {
+    const errorText = await response.text().catch(() => "Unknown error");
+    throw new Error(`OpenRouter API error ${response.status}: ${errorText}`);
+  }
+
+  const data = await response.json();
+  const content = data?.choices?.[0]?.message?.content?.trim();
+
+  if (!content) {
+    throw new Error("OpenRouter returned empty completion");
+  }
+
+  return {
+    ok: true,
+    content,
+    model: data?.model || model,
+    usage: data?.usage,
+  };
 }
 
 async function fetchLiveSearchResults(query) {
