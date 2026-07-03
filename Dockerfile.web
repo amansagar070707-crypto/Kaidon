@@ -1,0 +1,66 @@
+FROM node:22-alpine AS base
+RUN corepack enable && corepack prepare pnpm@9.15.0 --activate
+
+# Install dependencies
+FROM base AS deps
+WORKDIR /app
+COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
+COPY packages/apl/package.json packages/apl/
+COPY packages/runtime-protocol/package.json packages/runtime-protocol/
+COPY packages/runtime/package.json packages/runtime/
+COPY packages/harness/package.json packages/harness/
+COPY packages/llm/package.json packages/llm/
+COPY packages/tools/package.json packages/tools/
+COPY packages/memory/package.json packages/memory/
+COPY packages/design-system/package.json packages/design-system/
+COPY packages/component-registry/package.json packages/component-registry/
+COPY packages/sdk/package.json packages/sdk/
+COPY packages/cli/package.json packages/cli/
+COPY apps/server/package.json apps/server/
+COPY apps/web/package.json apps/web/
+RUN corepack pnpm install --frozen-lockfile
+
+# Build
+FROM base AS build
+WORKDIR /app
+COPY --from=deps /app/node_modules ./node_modules
+COPY --from=deps /app/packages ./packages
+COPY --from=deps /app/apps ./apps
+COPY --from=deps /app/pnpm-lock.yaml ./
+COPY --from=deps /app/pnpm-workspace.yaml ./
+COPY packages/apl/src packages/apl/src
+COPY packages/runtime-protocol/src packages/runtime-protocol/src
+COPY packages/runtime/src packages/runtime/src
+COPY packages/harness/src packages/harness/src
+COPY packages/llm/src packages/llm/src
+COPY packages/tools/src packages/tools/src
+COPY packages/memory/src packages/memory/src
+COPY packages/design-system/src packages/design-system/src
+COPY packages/component-registry/src packages/component-registry/src
+COPY packages/cli/src packages/cli/src
+COPY packages/cli/tsconfig.json packages/cli/
+COPY apps/server/src apps/server/src
+COPY apps/web/next.config.mjs apps/web/
+COPY apps/web/tsconfig.json apps/web/
+COPY apps/web/tailwind.config.ts apps/web/
+COPY apps/web/postcss.config.js apps/web/
+COPY apps/web/app apps/web/app
+COPY apps/web/components apps/web/components
+COPY apps/web/lib apps/web/lib
+COPY apps/web/public apps/web/public
+COPY apps/web/components.json apps/web/
+COPY tsconfig.base.json ./
+COPY vitest.config.ts ./
+COPY global.d.ts ./
+RUN corepack pnpm -r build
+
+# Production
+FROM node:22-alpine AS runner
+RUN corepack enable && corepack prepare pnpm@9.15.0 --activate
+WORKDIR /app
+ENV NODE_ENV=production
+COPY --from=build /app/apps/web/.next/standalone ./
+COPY --from=build /app/apps/web/.next/static ./apps/web/.next/static
+COPY --from=build /app/apps/web/public ./apps/web/public
+EXPOSE 3000
+CMD ["node", "apps/web/server.js"]
