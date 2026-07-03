@@ -11,6 +11,7 @@ import {
   Shield,
   Eye,
 } from "lucide-react";
+import { ThemeToggle } from "../components/theme-toggle";
 
 const features = [
   {
@@ -88,6 +89,7 @@ export default function HomePage() {
           <Link href="/runtime" className="nav-link">Runtime</Link>
           <Link href="/studio" className="nav-link">Studio</Link>
           <Link href="/login" className="nav-link">Log in</Link>
+          <ThemeToggle />
         </nav>
       </header>
 

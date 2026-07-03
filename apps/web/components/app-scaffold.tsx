@@ -9,6 +9,7 @@ import {
 } from "lucide-react";
 
 import { AppShell } from "@kaidon/design-system";
+import { ThemeToggle } from "./theme-toggle";
 
 type AppScaffoldProps = {
   active: "Home" | "Dashboard" | "Runtime" | "SDK" | "CLI" | "Studio" | "Cloud" | "Marketplace" | "Profile";
@@ -53,6 +54,7 @@ export function AppScaffold({ active, children }: AppScaffoldProps) {
               <User size={14} />
               <span>Profile</span>
             </Link>
+            <ThemeToggle />
           </nav>
         </>
       }

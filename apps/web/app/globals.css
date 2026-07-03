@@ -187,6 +187,10 @@ img {
   height: 20px;
 }
 
+.dark .nav-brand img {
+  filter: invert(1);
+}
+
 .nav-links {
   display: flex;
   align-items: center;
@@ -194,6 +198,9 @@ img {
 }
 
 .nav-link {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-5);
   font-size: var(--font-size-md, 14px);
   color: var(--muted-foreground);
   transition: color var(--motion-duration-fast, 150ms) ease;
