@@ -385,9 +385,17 @@ async function executeHarnessRun(agentId, taskId, execution) {
 
   if (useLiveApi) {
     try {
-      llmResponse = await callOpenRouterLLM(apiKey, model, {
+      llmResponse = await callOpenRouterLLMStream(apiKey, model, {
         system: `You are an AI agent named "${agent.name}". ${agent.description}\n\nYou have these tools: ${agent.tools.map((t) => t.name).join(", ")}.\n\nPerform the requested task and return a JSON result.`,
         user: query,
+      }, (token, fullContent) => {
+        broadcastRunSnapshot(agentId, taskId, "llm.token");
+        const execution = runExecutions.get(taskId);
+        if (execution) {
+          for (const client of execution.clients) {
+            writeSseEvent(client, "llm.token", { token, fullContent, agentId, taskId });
+          }
+        }
       });
 
       if (llmResponse.ok) {
@@ -402,6 +410,16 @@ async function executeHarnessRun(agentId, taskId, execution) {
       }
     } catch (error) {
       console.error("OpenRouter LLM call failed:", error.message);
+    }
+
+    if (llmResponse?.ok) {
+      broadcastRunSnapshot(agentId, taskId, "llm.complete");
+      const execution = runExecutions.get(taskId);
+      if (execution) {
+        for (const client of execution.clients) {
+          writeSseEvent(client, "llm.complete", { agentId, taskId, content: llmResponse.content });
+        }
+      }
     }
   }
 
@@ -558,6 +576,80 @@ async function callOpenRouterLLM(apiKey, model, messages) {
     content,
     model: data?.model || model,
     usage: data?.usage,
+  };
+}
+
+async function callOpenRouterLLMStream(apiKey, model, messages, onToken) {
+  const response = await fetch("https://openrouter.ai/api/v1/chat/completions", {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${apiKey}`,
+      "Content-Type": "application/json",
+      "HTTP-Referer": "http://localhost:3000",
+      "X-Title": "Kaidon Agent OS",
+    },
+    body: JSON.stringify({
+      model,
+      messages: [
+        { role: "system", content: messages.system },
+        { role: "user", content: messages.user },
+      ],
+      max_tokens: 2048,
+      temperature: 0.7,
+      stream: true,
+    }),
+  });
+
+  if (!response.ok) {
+    const errorText = await response.text().catch(() => "Unknown error");
+    throw new Error(`OpenRouter API error ${response.status}: ${errorText}`);
+  }
+
+  let fullContent = "";
+  let usage = null;
+  const reader = response.body;
+  const decoder = new TextDecoder();
+  let buffer = "";
+
+  for await (const chunk of reader) {
+    buffer += decoder.decode(chunk, { stream: true });
+    const lines = buffer.split("\n");
+    buffer = lines.pop() || "";
+
+    for (const line of lines) {
+      const trimmed = line.trim();
+      if (!trimmed || !trimmed.startsWith("data: ")) {
+        continue;
+      }
+
+      const payload = trimmed.slice(6);
+      if (payload === "[DONE]") {
+        continue;
+      }
+
+      try {
+        const parsed = JSON.parse(payload);
+        const delta = parsed.choices?.[0]?.delta?.content;
+        if (delta) {
+          fullContent += delta;
+          if (onToken) {
+            onToken(delta, fullContent);
+          }
+        }
+        if (parsed.usage) {
+          usage = parsed.usage;
+        }
+      } catch {
+        // skip malformed JSON chunks
+      }
+    }
+  }
+
+  return {
+    ok: true,
+    content: fullContent.trim(),
+    model,
+    usage,
   };
 }
 

@@ -2,24 +2,24 @@
   {
     "assignment": {
       "request": {
-        "id": "req_1783060881782",
-        "prompt": "Generate a support agent that handles billing questions, uses workspace memory, and requires approval before refunds above $250.",
+        "id": "req_1783078489215",
+        "prompt": "Create a job hunting agent that finds 2026 AI engineer roles, ranks matches, drafts outreach, and tracks applications in workspace memory.",
         "requestedBy": "studio-user",
-        "createdAt": "2026-07-03T06:41:21.782Z"
+        "createdAt": "2026-07-03T11:34:49.215Z"
       },
       "workItem": {
-        "id": "work_generate-a-support-agent-that-handles-bi",
-        "requestId": "req_1783060881782",
-        "title": "Generate generate-a-support-agent-that-handles-bi",
-        "summary": "Generate a support agent that handles billing questions, uses workspace memory, and requires approval before refunds above $250.",
+        "id": "work_create-a-job-hunting-agent-that-finds-20",
+        "requestId": "req_1783078489215",
+        "title": "Generate create-a-job-hunting-agent-that-finds-20",
+        "summary": "Create a job hunting agent that finds 2026 AI engineer roles, ranks matches, drafts outreach, and tracks applications in workspace memory.",
         "assignedAgent": "agent-builder",
-        "status": "generating"
+        "status": "ready"
       },
       "generatedAgent": {
-        "id": "generate-a-support-agent-that-handles-bi",
-        "name": "generate-a-support-agent-that-handles-bi",
+        "id": "create-a-job-hunting-agent-that-finds-20",
+        "name": "create-a-job-hunting-agent-that-finds-20",
         "version": "0.1.0",
-        "description": "Generate a support agent that handles billing questions, uses workspace memory, and requires approval before refunds above $250.",
+        "description": "Create a job hunting agent that finds 2026 AI engineer roles, ranks matches, drafts outreach, and tracks applications in workspace memory.",
         "model": {
           "provider": "openrouter",
           "model": "moonshotai/kimi-k2:free",
@@ -27,13 +27,18 @@
         },
         "tools": [
           {
-            "id": "tool_billing",
-            "name": "Billing lookup",
+            "id": "tool_job_search",
+            "name": "Job search",
             "required": true
           },
           {
-            "id": "tool_approval",
-            "name": "Approval",
+            "id": "tool_outreach",
+            "name": "Outreach drafting",
+            "required": true
+          },
+          {
+            "id": "tool_application_tracker",
+            "name": "Application tracker",
             "required": true
           }
         ],
@@ -45,12 +50,12 @@
         "status": "ready"
       },
       "task": {
-        "id": "task_generate-a-support-agent-that-handles-bi_1783060881783",
+        "id": "task_create-a-job-hunting-agent-that-finds-20_1783078489215",
         "agent": {
-          "id": "generate-a-support-agent-that-handles-bi",
-          "name": "generate-a-support-agent-that-handles-bi",
+          "id": "create-a-job-hunting-agent-that-finds-20",
+          "name": "create-a-job-hunting-agent-that-finds-20",
           "version": "0.1.0",
-          "description": "Generate a support agent that handles billing questions, uses workspace memory, and requires approval before refunds above $250.",
+          "description": "Create a job hunting agent that finds 2026 AI engineer roles, ranks matches, drafts outreach, and tracks applications in workspace memory.",
           "model": {
             "provider": "openrouter",
             "model": "moonshotai/kimi-k2:free",
@@ -58,13 +63,18 @@
           },
           "tools": [
             {
-              "id": "tool_billing",
-              "name": "Billing lookup",
+              "id": "tool_job_search",
+              "name": "Job search",
               "required": true
             },
             {
-              "id": "tool_approval",
-              "name": "Approval",
+              "id": "tool_outreach",
+              "name": "Outreach drafting",
+              "required": true
+            },
+            {
+              "id": "tool_application_tracker",
+              "name": "Application tracker",
               "required": true
             }
           ],
@@ -75,33 +85,33 @@
           },
           "status": "ready"
         },
-        "status": "queued",
+        "status": "running",
         "input": {
-          "requestId": "req_1783060881782",
-          "workItemId": "work_generate-a-support-agent-that-handles-bi",
-          "prompt": "Generate a support agent that handles billing questions, uses workspace memory, and requires approval before refunds above $250."
+          "requestId": "req_1783078489215",
+          "workItemId": "work_create-a-job-hunting-agent-that-finds-20",
+          "prompt": "Create a job hunting agent that finds 2026 AI engineer roles, ranks matches, drafts outreach, and tracks applications in workspace memory."
         },
         "checkpoints": [],
         "events": [
           {
             "type": "task.created",
-            "at": "2026-07-03T06:41:21.783Z",
-            "message": "Task created for generate-a-support-agent-that-handles-bi."
+            "at": "2026-07-03T11:34:49.215Z",
+            "message": "Task created for create-a-job-hunting-agent-that-finds-20."
           }
         ],
-        "updatedAt": "2026-07-03T06:41:21.783Z"
+        "updatedAt": "2026-07-03T11:34:49.215Z"
       }
     },
     "generation": {
       "source": "fallback"
     },
     "runningTask": {
-      "id": "task_generate-a-support-agent-that-handles-bi_1783060881783",
+      "id": "task_create-a-job-hunting-agent-that-finds-20_1783078489215",
       "agent": {
-        "id": "generate-a-support-agent-that-handles-bi",
-        "name": "generate-a-support-agent-that-handles-bi",
+        "id": "create-a-job-hunting-agent-that-finds-20",
+        "name": "create-a-job-hunting-agent-that-finds-20",
         "version": "0.1.0",
-        "description": "Generate a support agent that handles billing questions, uses workspace memory, and requires approval before refunds above $250.",
+        "description": "Create a job hunting agent that finds 2026 AI engineer roles, ranks matches, drafts outreach, and tracks applications in workspace memory.",
         "model": {
           "provider": "openrouter",
           "model": "moonshotai/kimi-k2:free",
@@ -109,13 +119,18 @@
         },
         "tools": [
           {
-            "id": "tool_billing",
-            "name": "Billing lookup",
+            "id": "tool_job_search",
+            "name": "Job search",
             "required": true
           },
           {
-            "id": "tool_approval",
-            "name": "Approval",
+            "id": "tool_outreach",
+            "name": "Outreach drafting",
+            "required": true
+          },
+          {
+            "id": "tool_application_tracker",
+            "name": "Application tracker",
             "required": true
           }
         ],
@@ -128,32 +143,27 @@
       },
       "status": "running",
       "input": {
-        "requestId": "req_1783060881782",
-        "workItemId": "work_generate-a-support-agent-that-handles-bi",
-        "prompt": "Generate a support agent that handles billing questions, uses workspace memory, and requires approval before refunds above $250."
+        "requestId": "req_1783078489215",
+        "workItemId": "work_create-a-job-hunting-agent-that-finds-20",
+        "prompt": "Create a job hunting agent that finds 2026 AI engineer roles, ranks matches, drafts outreach, and tracks applications in workspace memory."
       },
       "checkpoints": [],
       "events": [
         {
           "type": "task.created",
-          "at": "2026-07-03T06:41:21.783Z",
-          "message": "Task created for generate-a-support-agent-that-handles-bi."
-        },
-        {
-          "type": "task.started",
-          "at": "2026-07-03T06:41:21.783Z",
-          "message": "Task picked up by runtime."
+          "at": "2026-07-03T11:34:49.215Z",
+          "message": "Task created for create-a-job-hunting-agent-that-finds-20."
         }
       ],
-      "updatedAt": "2026-07-03T06:41:21.783Z"
+      "updatedAt": "2026-07-03T11:34:49.215Z"
     },
     "checkpointedTask": {
-      "id": "task_generate-a-support-agent-that-handles-bi_1783060881783",
+      "id": "task_create-a-job-hunting-agent-that-finds-20_1783078489215",
       "agent": {
-        "id": "generate-a-support-agent-that-handles-bi",
-        "name": "generate-a-support-agent-that-handles-bi",
+        "id": "create-a-job-hunting-agent-that-finds-20",
+        "name": "create-a-job-hunting-agent-that-finds-20",
         "version": "0.1.0",
-        "description": "Generate a support agent that handles billing questions, uses workspace memory, and requires approval before refunds above $250.",
+        "description": "Create a job hunting agent that finds 2026 AI engineer roles, ranks matches, drafts outreach, and tracks applications in workspace memory.",
         "model": {
           "provider": "openrouter",
           "model": "moonshotai/kimi-k2:free",
@@ -161,13 +171,18 @@
         },
         "tools": [
           {
-            "id": "tool_billing",
-            "name": "Billing lookup",
+            "id": "tool_job_search",
+            "name": "Job search",
             "required": true
           },
           {
-            "id": "tool_approval",
-            "name": "Approval",
+            "id": "tool_outreach",
+            "name": "Outreach drafting",
+            "required": true
+          },
+          {
+            "id": "tool_application_tracker",
+            "name": "Application tracker",
             "required": true
           }
         ],
@@ -180,44 +195,27 @@
       },
       "status": "running",
       "input": {
-        "requestId": "req_1783060881782",
-        "workItemId": "work_generate-a-support-agent-that-handles-bi",
-        "prompt": "Generate a support agent that handles billing questions, uses workspace memory, and requires approval before refunds above $250."
+        "requestId": "req_1783078489215",
+        "workItemId": "work_create-a-job-hunting-agent-that-finds-20",
+        "prompt": "Create a job hunting agent that finds 2026 AI engineer roles, ranks matches, drafts outreach, and tracks applications in workspace memory."
       },
-      "checkpoints": [
-        {
-          "id": "cp_task_generate-a-support-agent-that-handles-bi_1783060881783_1",
-          "status": "running",
-          "at": "2026-07-03T06:41:21.783Z",
-          "note": "Billing lookup checkpoint saved."
-        }
-      ],
+      "checkpoints": [],
       "events": [
         {
           "type": "task.created",
-          "at": "2026-07-03T06:41:21.783Z",
-          "message": "Task created for generate-a-support-agent-that-handles-bi."
-        },
-        {
-          "type": "task.started",
-          "at": "2026-07-03T06:41:21.783Z",
-          "message": "Task picked up by runtime."
-        },
-        {
-          "type": "task.updated",
-          "at": "2026-07-03T06:41:21.783Z",
-          "message": "Checkpoint saved: Billing lookup checkpoint saved."
+          "at": "2026-07-03T11:34:49.215Z",
+          "message": "Task created for create-a-job-hunting-agent-that-finds-20."
         }
       ],
-      "updatedAt": "2026-07-03T06:41:21.783Z"
+      "updatedAt": "2026-07-03T11:34:49.215Z"
     },
     "retriedTask": {
-      "id": "task_generate-a-support-agent-that-handles-bi_1783060881783",
+      "id": "task_create-a-job-hunting-agent-that-finds-20_1783078489215",
       "agent": {
-        "id": "generate-a-support-agent-that-handles-bi",
-        "name": "generate-a-support-agent-that-handles-bi",
+        "id": "create-a-job-hunting-agent-that-finds-20",
+        "name": "create-a-job-hunting-agent-that-finds-20",
         "version": "0.1.0",
-        "description": "Generate a support agent that handles billing questions, uses workspace memory, and requires approval before refunds above $250.",
+        "description": "Create a job hunting agent that finds 2026 AI engineer roles, ranks matches, drafts outreach, and tracks applications in workspace memory.",
         "model": {
           "provider": "openrouter",
           "model": "moonshotai/kimi-k2:free",
@@ -225,13 +223,18 @@
         },
         "tools": [
           {
-            "id": "tool_billing",
-            "name": "Billing lookup",
+            "id": "tool_job_search",
+            "name": "Job search",
             "required": true
           },
           {
-            "id": "tool_approval",
-            "name": "Approval",
+            "id": "tool_outreach",
+            "name": "Outreach drafting",
+            "required": true
+          },
+          {
+            "id": "tool_application_tracker",
+            "name": "Application tracker",
             "required": true
           }
         ],
@@ -242,62 +245,29 @@
         },
         "status": "ready"
       },
-      "status": "queued",
+      "status": "running",
       "input": {
-        "requestId": "req_1783060881782",
-        "workItemId": "work_generate-a-support-agent-that-handles-bi",
-        "prompt": "Generate a support agent that handles billing questions, uses workspace memory, and requires approval before refunds above $250."
+        "requestId": "req_1783078489215",
+        "workItemId": "work_create-a-job-hunting-agent-that-finds-20",
+        "prompt": "Create a job hunting agent that finds 2026 AI engineer roles, ranks matches, drafts outreach, and tracks applications in workspace memory."
       },
-      "checkpoints": [
-        {
-          "id": "cp_task_generate-a-support-agent-that-handles-bi_1783060881783_1",
-          "status": "running",
-          "at": "2026-07-03T06:41:21.783Z",
-          "note": "Billing lookup checkpoint saved."
-        },
-        {
-          "id": "cp_task_generate-a-support-agent-that-handles-bi_1783060881783_2",
-          "status": "running",
-          "at": "2026-07-03T06:41:21.783Z",
-          "note": "retry requested: Awaiting billing service timeout."
-        }
-      ],
+      "checkpoints": [],
       "events": [
         {
           "type": "task.created",
-          "at": "2026-07-03T06:41:21.783Z",
-          "message": "Task created for generate-a-support-agent-that-handles-bi."
-        },
-        {
-          "type": "task.started",
-          "at": "2026-07-03T06:41:21.783Z",
-          "message": "Task picked up by runtime."
-        },
-        {
-          "type": "task.updated",
-          "at": "2026-07-03T06:41:21.783Z",
-          "message": "Checkpoint saved: Billing lookup checkpoint saved."
-        },
-        {
-          "type": "task.updated",
-          "at": "2026-07-03T06:41:21.783Z",
-          "message": "Checkpoint saved: retry requested: Awaiting billing service timeout."
-        },
-        {
-          "type": "task.updated",
-          "at": "2026-07-03T06:41:21.783Z",
-          "message": "Task moved back to queue: Awaiting billing service timeout."
+          "at": "2026-07-03T11:34:49.215Z",
+          "message": "Task created for create-a-job-hunting-agent-that-finds-20."
         }
       ],
-      "updatedAt": "2026-07-03T06:41:21.783Z"
+      "updatedAt": "2026-07-03T11:34:49.215Z"
     },
     "canceledTask": {
-      "id": "task_generate-a-support-agent-that-handles-bi_1783060881783",
+      "id": "task_create-a-job-hunting-agent-that-finds-20_1783078489215",
       "agent": {
-        "id": "generate-a-support-agent-that-handles-bi",
-        "name": "generate-a-support-agent-that-handles-bi",
+        "id": "create-a-job-hunting-agent-that-finds-20",
+        "name": "create-a-job-hunting-agent-that-finds-20",
         "version": "0.1.0",
-        "description": "Generate a support agent that handles billing questions, uses workspace memory, and requires approval before refunds above $250.",
+        "description": "Create a job hunting agent that finds 2026 AI engineer roles, ranks matches, drafts outreach, and tracks applications in workspace memory.",
         "model": {
           "provider": "openrouter",
           "model": "moonshotai/kimi-k2:free",
@@ -305,13 +275,18 @@
         },
         "tools": [
           {
-            "id": "tool_billing",
-            "name": "Billing lookup",
+            "id": "tool_job_search",
+            "name": "Job search",
             "required": true
           },
           {
-            "id": "tool_approval",
-            "name": "Approval",
+            "id": "tool_outreach",
+            "name": "Outreach drafting",
+            "required": true
+          },
+          {
+            "id": "tool_application_tracker",
+            "name": "Application tracker",
             "required": true
           }
         ],
@@ -322,65 +297,27 @@
         },
         "status": "ready"
       },
-      "status": "canceled",
+      "status": "running",
       "input": {
-        "requestId": "req_1783060881782",
-        "workItemId": "work_generate-a-support-agent-that-handles-bi",
-        "prompt": "Generate a support agent that handles billing questions, uses workspace memory, and requires approval before refunds above $250."
+        "requestId": "req_1783078489215",
+        "workItemId": "work_create-a-job-hunting-agent-that-finds-20",
+        "prompt": "Create a job hunting agent that finds 2026 AI engineer roles, ranks matches, drafts outreach, and tracks applications in workspace memory."
       },
-      "checkpoints": [
-        {
-          "id": "cp_task_generate-a-support-agent-that-handles-bi_1783060881783_1",
-          "status": "running",
-          "at": "2026-07-03T06:41:21.783Z",
-          "note": "Billing lookup checkpoint saved."
-        },
-        {
-          "id": "cp_task_generate-a-support-agent-that-handles-bi_1783060881783_2",
-          "status": "running",
-          "at": "2026-07-03T06:41:21.783Z",
-          "note": "retry requested: Awaiting billing service timeout."
-        }
-      ],
+      "checkpoints": [],
       "events": [
         {
           "type": "task.created",
-          "at": "2026-07-03T06:41:21.783Z",
-          "message": "Task created for generate-a-support-agent-that-handles-bi."
-        },
-        {
-          "type": "task.started",
-          "at": "2026-07-03T06:41:21.783Z",
-          "message": "Task picked up by runtime."
-        },
-        {
-          "type": "task.updated",
-          "at": "2026-07-03T06:41:21.783Z",
-          "message": "Checkpoint saved: Billing lookup checkpoint saved."
-        },
-        {
-          "type": "task.updated",
-          "at": "2026-07-03T06:41:21.783Z",
-          "message": "Checkpoint saved: retry requested: Awaiting billing service timeout."
-        },
-        {
-          "type": "task.updated",
-          "at": "2026-07-03T06:41:21.783Z",
-          "message": "Task moved back to queue: Awaiting billing service timeout."
-        },
-        {
-          "type": "task.canceled",
-          "at": "2026-07-03T06:41:21.783Z",
-          "message": "Task canceled: User closed request."
+          "at": "2026-07-03T11:34:49.215Z",
+          "message": "Task created for create-a-job-hunting-agent-that-finds-20."
         }
       ],
-      "updatedAt": "2026-07-03T06:41:21.783Z"
+      "updatedAt": "2026-07-03T11:34:49.215Z"
     },
     "enabledTools": [
       {
-        "id": "tool_billing",
-        "name": "Billing lookup",
-        "description": "Lookup invoices and payment state.",
+        "id": "tool_job_search",
+        "name": "Job search",
+        "description": "Search and rank open roles from approved job sources.",
         "scope": "workspace",
         "transport": "mcp",
         "permissions": [
@@ -389,32 +326,43 @@
         "version": "0.1.0"
       },
       {
-        "id": "tool_approval",
-        "name": "Approval",
-        "description": "Send approval requests for high-impact actions.",
+        "id": "tool_outreach",
+        "name": "Outreach drafting",
+        "description": "Draft recruiter messages and application notes.",
         "scope": "workspace",
         "transport": "http",
         "permissions": [
-          "approve"
+          "write"
+        ],
+        "version": "0.1.0"
+      },
+      {
+        "id": "tool_application_tracker",
+        "name": "Application tracker",
+        "description": "Track target companies, outreach state, and follow-ups.",
+        "scope": "workspace",
+        "transport": "http",
+        "permissions": [
+          "write"
         ],
         "version": "0.1.0"
       }
     ],
     "contextSnapshot": {
-      "agentId": "generate-a-support-agent-that-handles-bi",
-      "summary": "Workspace context preserved for current support workflow.",
+      "agentId": "create-a-job-hunting-agent-that-finds-20",
+      "summary": "Workspace context preserved for the current agent workflow.",
       "items": [
         {
           "id": "mem_1",
           "scope": "workspace",
-          "content": "Billing lookup allowed for support escalation.",
-          "source": "task_generate-a-support-agent-that-handles-bi_1783060881783"
+          "content": "Target roles include AI engineer, agent engineer, and full-stack AI roles.",
+          "source": "task_create-a-job-hunting-agent-that-finds-20_1783078489215"
         },
         {
           "id": "mem_2",
           "scope": "session",
-          "content": "Customer ticket asks for invoice correction.",
-          "source": "task_generate-a-support-agent-that-handles-bi_1783060881783"
+          "content": "User prefers 2026 openings with remote or hybrid options.",
+          "source": "task_create-a-job-hunting-agent-that-finds-20_1783078489215"
         }
       ],
       "budget": {
@@ -429,6 +377,70 @@
         "allowRetrieval": true
       }
     },
-    "visibleContextTokens": 128
+    "visibleContextTokens": 128,
+    "timeline": {
+      "query": "Create a job hunting agent that finds 2026 AI engineer roles, ranks matches, drafts outreach, and tracks applications in workspace memory.",
+      "stage": "Research",
+      "progress": 8,
+      "remainingSteps": 5,
+      "phases": [
+        {
+          "id": "discover",
+          "label": "Discover",
+          "status": "complete",
+          "hint": "Clarify request and constraints."
+        },
+        {
+          "id": "search",
+          "label": "Search",
+          "status": "active",
+          "hint": "Check approved sources."
+        },
+        {
+          "id": "rank",
+          "label": "Rank",
+          "status": "pending",
+          "hint": "Compare matches and trade-offs."
+        },
+        {
+          "id": "draft",
+          "label": "Draft",
+          "status": "pending",
+          "hint": "Prepare output for the user."
+        },
+        {
+          "id": "track",
+          "label": "Track",
+          "status": "pending",
+          "hint": "Persist the result for follow-up."
+        }
+      ],
+      "events": [
+        {
+          "id": "task_create-a-job-hunting-agent-that-finds-20_1783078489215_timeline_1",
+          "type": "task.created",
+          "title": "Task Created",
+          "description": "Task created for create-a-job-hunting-agent-that-finds-20.",
+          "at": "2026-07-03T11:34:49.215Z",
+          "state": "started"
+        }
+      ],
+      "lastUpdatedAt": "2026-07-03T11:34:49.215Z"
+    },
+    "research": {
+      "query": "Create a job hunting agent that finds 2026 AI engineer roles, ranks matches, drafts outreach, and tracks applications in workspace memory.",
+      "status": "running",
+      "progress": 50,
+      "completedSteps": 0,
+      "totalSteps": 6,
+      "currentStep": "Testing",
+      "sources": [
+        "LinkedIn",
+        "Wellfound",
+        "Greenhouse"
+      ],
+      "results": [],
+      "lastUpdatedAt": "2026-07-03T11:34:49.215Z"
+    }
   }
 ]

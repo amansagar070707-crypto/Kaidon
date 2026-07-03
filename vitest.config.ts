@@ -5,7 +5,7 @@ export default defineConfig({
   test: {
     globals: true,
     environment: "node",
-    include: ["packages/*/src/**/*.test.ts"],
+    include: ["packages/*/src/**/*.test.ts", "apps/server/src/**/*.test.js"],
     coverage: {
       provider: "v8",
       include: ["packages/*/src/**/*.ts"],
@@ -25,6 +25,7 @@ export default defineConfig({
       "@kaidon/tools": path.resolve(__dirname, "packages/tools/src"),
       "@kaidon/memory": path.resolve(__dirname, "packages/memory/src"),
       "@kaidon/cli": path.resolve(__dirname, "packages/cli/src"),
+      "@kaidon/sdk": path.resolve(__dirname, "packages/sdk/src"),
     },
   },
 });
